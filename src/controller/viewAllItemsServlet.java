@@ -31,12 +31,16 @@ public class viewAllItemsServlet extends HttpServlet {
 		ListItemHelper dao = new ListItemHelper();
 		
 		request.setAttribute("allItems", dao.showAllItems());
-					
+		
+		String path = "/shopping-list.jsp";
+		
 		if(dao.showAllItems().isEmpty()){
-				request.setAttribute("allItems", " ");
+			//if there's nothing in the list, redirect the user to the index to add an item
+			path = "/index.html";
+			request.setAttribute("allItems", " ");
 		}
 
-		getServletContext().getRequestDispatcher("/shopping-list.jsp").forward(request, response);
+		getServletContext().getRequestDispatcher(path).forward(request, response);
 	
 	}
 
