@@ -15,30 +15,33 @@ import model.ListItem;
 @WebServlet("/addItemServlet")
 public class addItemServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public addItemServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public addItemServlet() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String store = request.getParameter("store");
 		String item = request.getParameter("item");
-		
-		ListItem li = new ListItem(store, item);
-		ListItemHelper dao = new ListItemHelper();
-		dao.insertItem(li);
-		
-		getServletContext().getRequestDispatcher("/index.html").forward(request, response);
+		if (store.isEmpty() || item.isEmpty() || store == null || item == null) {
+			getServletContext().getRequestDispatcher("/index.html").forward(request, response);
+		} else {
+			ListItem li = new ListItem(store, item);
+			ListItemHelper dao = new ListItemHelper();
+			dao.insertItem(li);
 
+			getServletContext().getRequestDispatcher("/index.html").forward(request, response);
+		}
 	}
 
 }
