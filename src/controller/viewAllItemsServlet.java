@@ -37,7 +37,7 @@ public class viewAllItemsServlet extends HttpServlet {
 		if(dao.showAllItems().isEmpty()){
 			//if there's nothing in the list, redirect the user to the index to add an item
 			path = "/index.html";
-			request.setAttribute("allItems", " ");
+		
 		}
 
 		getServletContext().getRequestDispatcher(path).forward(request, response);
