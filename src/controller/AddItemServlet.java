@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import model.ListItem;
 
 /**
- * Servlet implementation class addItemServlet
+ * Servlet implementation class AddItemServlet
  */
 @WebServlet("/addItemServlet")
 public class AddItemServlet extends HttpServlet {
