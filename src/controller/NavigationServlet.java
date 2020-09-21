@@ -13,13 +13,13 @@ import model.ListItem;
  * Servlet implementation class navigationServlet
  */
 @WebServlet("/navigationServlet")
-public class navigationServlet extends HttpServlet {
+public class NavigationServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public navigationServlet() {
+	public NavigationServlet() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -44,20 +44,18 @@ public class navigationServlet extends HttpServlet {
 		ListItemHelper dao = new ListItemHelper();
 		String act = request.getParameter("doThisToItem");
 
-		if (act == null) {
-			// no button has been selected
-			getServletContext().getRequestDispatcher("/viewAllItemsServlet").forward(request, response);
+		// after all changes, we should redirect to the viewAllItems servlet
+		// The only time we don't is if they select to add a new item or edit
+		String path = "/viewAllItemsServlet";
 
-		} else if (act.equals("delete")) {
+		if (act.equals("delete")) {
 			try {
 				Integer tempId = Integer.parseInt(request.getParameter("id"));
 				ListItem itemToDelete = dao.searchForItemById(tempId);
 				dao.deleteItem(itemToDelete);
 
 			} catch (NumberFormatException e) {
-				System.out.println("Forgot to click a button");
-			} finally {
-				getServletContext().getRequestDispatcher("/viewAllItemsServlet").forward(request, response);
+				System.out.println("Forgot to select an item");
 			}
 
 		} else if (act.equals("edit")) {
@@ -65,14 +63,17 @@ public class navigationServlet extends HttpServlet {
 				Integer tempId = Integer.parseInt(request.getParameter("id"));
 				ListItem itemToEdit = dao.searchForItemById(tempId);
 				request.setAttribute("itemToEdit", itemToEdit);
-				getServletContext().getRequestDispatcher("/edit-item.jsp").forward(request, response);
+				path = "/edit-item.jsp";
 			} catch (NumberFormatException e) {
-				getServletContext().getRequestDispatcher("/viewAllItemsServlet").forward(request, response);
-			} 
+				System.out.println("Forgot to select an item");
+			}
 
 		} else if (act.equals("add")) {
-			getServletContext().getRequestDispatcher("/index.html").forward(request, response);
+			path = "/index.html";
+
 		}
+
+		getServletContext().getRequestDispatcher(path).forward(request, response);
 
 	}
 
