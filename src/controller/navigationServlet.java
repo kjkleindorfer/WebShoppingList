@@ -13,13 +13,13 @@ import model.ListItem;
  * Servlet implementation class navigationServlet
  */
 @WebServlet("/navigationServlet")
-public class NavigationServlet extends HttpServlet {
+public class navigationServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public NavigationServlet() {
+	public navigationServlet() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -44,18 +44,20 @@ public class NavigationServlet extends HttpServlet {
 		ListItemHelper dao = new ListItemHelper();
 		String act = request.getParameter("doThisToItem");
 
-		// after all changes, we should redirect to the viewAllItems servlet
-		// The only time we don't is if they select to add a new item or edit
-		String path = "/viewAllItemsServlet";
+		if (act == null) {
+			// no button has been selected
+			getServletContext().getRequestDispatcher("/viewAllItemsServlet").forward(request, response);
 
-		if (act.equals("delete")) {
+		} else if (act.equals("delete")) {
 			try {
 				Integer tempId = Integer.parseInt(request.getParameter("id"));
 				ListItem itemToDelete = dao.searchForItemById(tempId);
 				dao.deleteItem(itemToDelete);
 
 			} catch (NumberFormatException e) {
-				System.out.println("Forgot to select an item");
+				System.out.println("Forgot to click a button");
+			} finally {
+				getServletContext().getRequestDispatcher("/viewAllItemsServlet").forward(request, response);
 			}
 
 		} else if (act.equals("edit")) {
@@ -63,17 +65,14 @@ public class NavigationServlet extends HttpServlet {
 				Integer tempId = Integer.parseInt(request.getParameter("id"));
 				ListItem itemToEdit = dao.searchForItemById(tempId);
 				request.setAttribute("itemToEdit", itemToEdit);
-				path = "/edit-item.jsp";
+				getServletContext().getRequestDispatcher("/edit-item.jsp").forward(request, response);
 			} catch (NumberFormatException e) {
-				System.out.println("Forgot to select an item");
-			}
+				getServletContext().getRequestDispatcher("/viewAllItemsServlet").forward(request, response);
+			} 
 
 		} else if (act.equals("add")) {
-			path = "/index.html";
-
+			getServletContext().getRequestDispatcher("/index.html").forward(request, response);
 		}
-
-		getServletContext().getRequestDispatcher(path).forward(request, response);
 
 	}
 
